@@ -1,0 +1,15 @@
+# handlers file for dnsmasq role
+---
+- name: restart dnsmasq
+  service:
+    name: dnsmasq
+    state: restarted
+  tags:
+      - dnsmasq
+
+- name: restart networking
+  service:
+    name: network
+    state: restarted
+  tags:
+      - dnsmasq

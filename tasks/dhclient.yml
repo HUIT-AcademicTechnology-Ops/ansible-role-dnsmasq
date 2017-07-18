@@ -1,0 +1,22 @@
+# Modify dhclient configuration to use dnsmasq
+---
+- name: Figure out which dhclient conf file is being used, in preferred order
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - /etc/dhcp/dhclient-eth0.conf
+    - /etc/dhcp/dhclient.conf
+  register: dhcp_conf_files
+  tags:
+    - dnsmasq
+    - dnsmasq-dhclient
+
+- name: Modify dhclient conf to use 127.0.0.1 as the primary dns server
+  lineinfile:
+    dest: "{{ (dhcp_conf_files.results|map(attribute='stat')|selectattr('exists')|first).path }}"
+    line: 'prepend domain-name-servers 127.0.0.1;'
+    state: present
+  notify: restart networking
+  tags:
+    - dnsmasq
+    - dnsmasq-dhclient

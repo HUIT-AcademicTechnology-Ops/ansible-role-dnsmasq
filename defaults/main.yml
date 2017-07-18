@@ -1,0 +1,9 @@
+# defaults for dnsmasq
+---
+dnsmasq_cache_size: 150
+dnsmasq_enable_all_confs: false
+dnsmasq_listen_address: 127.0.0.1
+dnsmasq_server_addresses: []
+# Pass in port like below to specify which
+# port dnsmasq listens on
+# dnsmasq_port: 5003

@@ -1,0 +1,39 @@
+---
+# Main task file for dnsmasq role
+- name: install dnsmasq
+  package:
+    name: dnsmasq
+    state: latest
+  tags:
+    - dnsmasq
+    - dnsmasq-install
+
+- name: modify dnsmasq conf file
+  template:
+    src: etc/dnsmasq.conf.j2
+    dest: /etc/dnsmasq.conf
+    owner: root
+    group: root
+    mode: 0644
+    validate: 'dnsmasq --test -C %s'
+  notify: restart dnsmasq
+  tags:
+    - dnsmasq
+    - dnsmasq-conf
+
+- name: start and enable dnsmasq service
+  service:
+    name: dnsmasq
+    state: started
+    enabled: true
+  tags:
+      - dnsmasq
+      - dnsmasq-start-and-enable-service
+
+# Ubuntu/Debian installations override the /etc/resolv.conf file to
+# replace the dns server with 127.0.0.1, but CentOS and AWS linux
+# installations do not.  If we're not running on Debian, update the
+# dhclient.conf file to add 127.0.0.1 as the first dns server entry
+# in resolv.conf and restart networking services.
+- include: dhclient.yml
+  when: not ansible_os_family == 'Debian'

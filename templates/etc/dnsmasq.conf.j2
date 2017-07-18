@@ -1,0 +1,23 @@
+# {{ ansible_managed }}
+
+# See http://thekelleys.org.uk/gitweb/?p=dnsmasq.git;a=blob;f=dnsmasq.conf.example;h=790eaf5c357bdd2305b8ac76adc9db27c24807c0;hb=HEAD
+# for sample dnsmasq.conf with full set of config options.
+
+{% if dnsmasq_port is defined %}
+port={{ dnsmasq_port }}
+{% endif %}
+
+listen-address={{ dnsmasq_listen_address }}
+
+# Default is 150, but can be zeroed out if you just want to forward
+# dns lookups for specified domains
+cache-size={{ dnsmasq_cache_size }}
+
+{% for address in dnsmasq_server_addresses %}
+server={{ address }}
+{% endfor %}
+
+{% if dnsmasq_enable_all_confs %}
+# Include all files in a directory which end in .conf
+conf_dir=/etc/dnsmasq.d/,*.conf
+{% endif %}

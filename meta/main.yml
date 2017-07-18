@@ -1,0 +1,19 @@
+galaxy_info:
+  author: Jaime Bermudez
+  description: Installs dnsmasq and a configurable set of sites in dnsmasq.d
+  company: HUIT Academic Technology at Harvard University
+  license: MIT
+  min_ansible_version: 2.0
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: CentOS
+      versions:
+        - all
+    - name: Amazon
+      versions:
+        - all
+  galaxy_tags:
+    - dnsmasq
+dependencies: []
