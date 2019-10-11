@@ -50,7 +50,7 @@
     - dnsmasq-start-and-enable-service
 
 - name: ensure that the systemd-resolved custom config file exists
-  ini_file:
+  copy:
     dest: /etc/systemd/resolved.conf.d/dnsmasq.conf
     content: "[Resolve]\nDNS={{ dnsmasq_listen_address }}\n"
   when: systemd_resolved.rc == 0
