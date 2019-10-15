@@ -41,6 +41,12 @@
 
 # On installations that use systemd-resolved, we need to add a file
 # to /etc/systemd/resolved.conf.d
+
+- name: make sure resolved.conf.d directory exists
+  file:
+    dest: /etc/systemd/resolved.conf.d
+    state: directory
+
 - name: check if the systemd-resolved service exists
   shell: service systemd-resolved status
   register: systemd_resolved_status
