@@ -44,7 +44,7 @@
 - name: check if the systemd-resolved service exists
   shell: service systemd-resolved status
   register: systemd_resolved_status
-  failed_when: not(systemd_resolved.rc == 3 or systemd_resolved.rc == 0)
+  failed_when: not(systemd_resolved_status.rc == 3 or systemd_resolved_status.rc == 0)
   tags:
     - dnsmasq
     - dnsmasq-start-and-enable-service
@@ -53,7 +53,7 @@
   copy:
     dest: /etc/systemd/resolved.conf.d/dnsmasq.conf
     content: "[Resolve]\nDNS={{ dnsmasq_listen_address }}\n"
-  when: systemd_resolved.rc == 0
+  when: systemd_resolved_status.rc == 0
   notify: restart systemd-resolved
   tags:
     - dnsmasq
