@@ -13,6 +13,8 @@ listen-address={{ dnsmasq_listen_address }}
 # dns lookups for specified domains
 cache-size={{ dnsmasq_cache_size }}
 
+server=169.254.169.253
+
 {% for address in dnsmasq_server_addresses %}
 server={{ address }}
 {% endfor %}

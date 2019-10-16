@@ -42,10 +42,10 @@
 # On installations that use systemd-resolved, we need to add a file
 # to /etc/systemd/resolved.conf.d
 
-- name: make sure resolved.conf.d directory exists
-  file:
-    dest: /etc/systemd/resolved.conf.d
-    state: directory
+# - name: make sure resolved.conf.d directory exists
+#   file:
+#     dest: /etc/systemd/resolved.conf.d
+#     state: directory
 
 - name: check if the systemd-resolved service exists
   shell: service systemd-resolved status
@@ -55,12 +55,28 @@
     - dnsmasq
     - dnsmasq-start-and-enable-service
 
-- name: ensure that the systemd-resolved custom config file exists
+# - name: ensure that the systemd-resolved custom config file exists
+#   copy:
+#     dest: /etc/systemd/resolved.conf.d/dnsmasq.conf
+#     content: "[Resolve]\nDNS={{ dnsmasq_listen_address }}\n"
+#   when: systemd_resolved_status.rc == 0
+#   notify: restart systemd-resolved
+#   tags:
+#     - dnsmasq
+#     - dnsmasq-start-and-enable-service
+
+# On installations that use systemd-resolved, disable it and configure /etc/resolv.conf to use the dnsmasq address instead
+
+- name: make sure that /etc/resolv.conf points to 127.0.0.1
   copy:
-    dest: /etc/systemd/resolved.conf.d/dnsmasq.conf
-    content: "[Resolve]\nDNS={{ dnsmasq_listen_address }}\n"
-  when: systemd_resolved_status.rc == 0
-  notify: restart systemd-resolved
+    dest: /etc/resolv.conf
+    content: "nameserver 127.0.0.1\nsearch ec2.internal\n"
   tags:
     - dnsmasq
-    - dnsmasq-start-and-enable-service
+
+- name: disable systemd-resolved
+  service:
+    name: systemd-resolved
+    state: stopped
+    enabled: no
+  when: systemd_resolved_status.rc == 0
