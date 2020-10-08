@@ -53,7 +53,7 @@
 - name: check if the systemd-resolved service exists
   shell: service systemd-resolved status
   register: systemd_resolved_status
-  failed_when: not(systemd_resolved_status.rc == 3 or systemd_resolved_status.rc == 0)
+  failed_when: not(systemd_resolved_status.rc == 4 or systemd_resolved_status.rc == 3 or systemd_resolved_status.rc == 0)
   tags:
     - dnsmasq
     - dnsmasq-start-and-enable-service
